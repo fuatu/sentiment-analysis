@@ -20,11 +20,10 @@ session = Session()
 
 
 def generate_or_read_keys():
-    import os, sys
-    import binascii
-
+    import os
+    project_path = os.path.dirname(os.path.abspath(__file__))
+    print("project path --->",project_path)
     try:
-        project_path = os.path.dirname(sys.modules['__main__'].__file__)
         # check if public and private key exists
         publickey_file = open(project_path + "/publickey", "rb")
         privatekey_file = open(project_path + "/privatekey", "rb")
