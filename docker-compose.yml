@@ -4,10 +4,10 @@ services:
     image: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: Q1x2v4c5
       MYSQL_DATABASE: octopus
-      MYSQL_USER: password
-      MYSQL_PASSWORD: password
+      MYSQL_USER: octotest
+      MYSQL_PASSWORD: Q1x2v4c5
     ports:
      - "3306:3306"
   web:

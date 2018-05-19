@@ -10,9 +10,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # connect to mysql database and create session
-# if want to install without docker and run locally use localhost instead of db
-# example mysql+pymysql://octotest:Q1x2v4c5@localhost/octopus
-engine = create_engine('mysql+pymysql://root:password@db/octopus', pool_recycle=3600)
+# if want to install with docker and run use db instead of localhost
+# example mysql+pymysql://octotest:Q1x2v4c5@db/octopus
+engine = create_engine('mysql+pymysql://octotest:Q1x2v4c5@localhost/octopus', pool_recycle=3600)
 connection = engine.connect()
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
