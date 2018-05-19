@@ -1,0 +1,19 @@
+version: '3'
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: octopus
+      MYSQL_USER: password
+      MYSQL_PASSWORD: password
+    ports:
+     - "3306:3306"
+  web:
+    build: .
+    command: python3 main.py
+    ports:
+     - "8888:8888"
+    depends_on:
+     - db

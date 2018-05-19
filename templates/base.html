@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <title>{% block title %}Octopus Test{% end %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
+    <script>
+        var datatableprops = {
+            dom: 'Brtip',
+            retrieve: true,
+            "pageLength": 25,
+        };
+        $(document).ready(
+            function() {
+               $('.datatables.table.table-striped').DataTable(datatableprops);
+            }
+        );
+    </script>
+  </head>
+  <body>
+    <div class="jumbotron jumbotron-fluid text-center custom" style="background-image:url('/media/sky-3395811_1920.jpg'); color:white">
+      <div class="container ">
+        <h1>Octopus Backend Challenge</h1>
+        <a href="/" class="btn btn-lg btn-lg btn-primary">Home Page</a> <a href="/admin" class="btn btn-lg btn-lg btn-primary">Admin Page</a>
+      </div>
+    </div>
+    {% block content %}
+    {% end %}
+  </body>
+</html>

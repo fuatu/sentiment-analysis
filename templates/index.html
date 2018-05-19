@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% end %}
+
+{% block content %}
+  <div class="container mx-auto">
+    <h3 style="color:red">{{ form_error }}</h3>
+    <form method="post">
+      <div class="form-group">
+      <input name="url" class="form-control form-control-lg" type="text" placeholder="Please enter a URL"><br/>
+      <button type="submit" class="btn btn-success">Submit</button>
+      </div>
+    </form>
+    {% if words %}
+    <div>
+      {% for w in words %}
+      <span style="font-size: {{ w[1] }}px">{{ w[0] }}</span> &nbsp;
+      {% end %}
+    {% end %}
+  </div>
+{% end %}

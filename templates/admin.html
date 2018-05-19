@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% end %}
+
+{% block content %}
+  <div class="container mx-auto">
+      <div class="row">
+          <div class="col">
+                <h2>Word List</h2>
+                <table id="table1" class="datatables table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Word</th>
+                            <th scope="col">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, ww in enumerate(words) %}
+                        <tr>
+                            <th scope="row">{{ index }} </th>
+                            <td>{{ ww['word_text'] }}</td>
+                            <td>{{ ww['word_count'] }}</td>
+                        </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+          </div>
+          <div class="col">
+              <h2>Link List</h2>
+              <table id="table1" class="datatables table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Link</th>
+                            <th scope="col">Sentiment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, ll in enumerate(links) %}
+                        <tr>
+                            <th scope="row">{{ index }} </th>
+                            <td><a href="{{ ll.url_text }}">{{ ll.url_text[:30] }}</a></td>
+                            <td>{{ ll.sentiment }}</td>
+                        </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+          </div>
+      </div>
+  </div>
+{% end %}
