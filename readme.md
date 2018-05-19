@@ -18,3 +18,11 @@
 
 - access it from http://localhost:8888
 
+## To run it on docker. Run the command below in project folder
+
+      $ docker-compose up
+
+## To secure the private key file change their permissions
+
+      $ chmod 400 privatekey
+
