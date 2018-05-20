@@ -1,7 +1,7 @@
 version: '3'
 services:
   db:
-    image: mysql
+    image: mysql:5.7.22
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: Q1x2v4c5
@@ -12,8 +12,10 @@ services:
      - "3306:3306"
   web:
     build: .
-    command: python3 main.py
+    command: ["./wait-for-it.sh", "db:3306", "--timeout=60", "--", "python3", "main.py"]
     ports:
      - "8888:8888"
+    links:
+     - db
     depends_on:
      - db
