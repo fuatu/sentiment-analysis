@@ -2,3 +2,6 @@ privatekey
 publickey
 __pycache__/
 .idea
+launch.json
+settings.json
+

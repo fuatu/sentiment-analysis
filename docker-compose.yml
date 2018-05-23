@@ -8,8 +8,8 @@ services:
       MYSQL_DATABASE: octopus
       MYSQL_USER: octotest
       MYSQL_PASSWORD: Q1x2v4c5
-    ports:
-     - "3306:3306"
+    #ports:
+    # - "3306:3306"
   web:
     build: .
     command: ["./wait-for-it.sh", "db:3306", "--timeout=60", "--", "python3", "main.py"]

@@ -8,13 +8,12 @@ from Crypto.PublicKey import RSA
 import base64
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from settings import DATABASE_SETTINGS, TITLE, SALT
 
 # connect to mysql database and create session
-# if want to install with docker or local use the options below
-# example for docker: mysql+pymysql://octotest:Q1x2v4c5@db/octopus
-# example for local mysql+pymysql://octotest:Q1x2v4c5@localhost/octopus
-
-engine = create_engine('mysql+pymysql://octotest:Q1x2v4c5@db/octopus', pool_recycle=3600)
+connection_string = 'mysql+pymysql://{}:{}@{}/{}' \
+    .format(DATABASE_SETTINGS['user'],DATABASE_SETTINGS['password'],DATABASE_SETTINGS['host'],DATABASE_SETTINGS['database'])
+engine = create_engine(connection_string, pool_recycle=3600)
 connection = engine.connect()
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
@@ -64,7 +63,7 @@ def decrypt_message(encoded_encrypted_msg, privatekey):
 
 def get_sentiment(words=None):
     #gets the sentiment from wit.io and gives a positive or negative point according to wordcount
-    #at the end returns a positive, negative or indifferent result
+    #at the end returns a positive, negative or neutral result
     if words is None:
         return None
     # limiting wors to top 50 as it takes sometime to run
@@ -79,6 +78,7 @@ def get_sentiment(words=None):
         response = requests.get(resturl, headers=headers)
         text_sentiment = response.text
         json_sentiment = json.loads(text_sentiment)
+        print(json_sentiment)
         try:
             sentiment = json_sentiment['entities']['sentiment'][0]['value']
             if sentiment=='positive':
@@ -86,7 +86,7 @@ def get_sentiment(words=None):
             elif sentiment=='negative':
                 negative+=1*w[1]
         except:
-            sentiment = 'Indifferent'
+            sentiment = 'neutral'
     # Assumes positive for equal results
     if positive>=negative:
         sentiment="Positive"
@@ -137,8 +137,8 @@ def get_salted_hash(word=None):
     import hashlib, uuid
     if word is None:
         return None
-    salt = uuid.uuid4().hex
-    salt = "mysalt"
+    #salt = uuid.uuid4().hex
+    salt = SALT
     hashed_word = hashlib.sha512(word.encode('utf-8') + salt.encode('utf-8')).hexdigest()
     return hashed_word
 
@@ -178,11 +178,10 @@ def add_url_to_db(url=None,sentiment=None):
     session.commit()
 
 class MainHandler(tornado.web.RequestHandler):
-
     def get(self):
         form_error=""
         words=""
-        self.render("templates/index.html", title="My title",form_error=form_error,words=words)
+        self.render("templates/index.html", title=TITLE,form_error=form_error,words=words)
 
     def post(self):
         from bs4 import BeautifulSoup
@@ -197,7 +196,7 @@ class MainHandler(tornado.web.RequestHandler):
         except:
             # If url not valid display error
             form_error = "Please provide a valid URL"
-            self.render("templates/index.html", title="My title", form_error=form_error,words=words)
+            self.render("templates/index.html", title=TITLE, form_error=form_error,words=words)
             return
         # get html text
         html = response.text
@@ -221,7 +220,7 @@ class MainHandler(tornado.web.RequestHandler):
         # make the sentiment analyis according to top 100 words
         sentiment = get_sentiment(words=top_100_words)
         add_url_to_db(url=url,sentiment=sentiment)
-        self.render("templates/index.html", title="My Title", url=url,form_error=form_error,words=wordlist)
+        self.render("templates/index.html", title=TITLE, url=url,form_error=form_error,words=wordlist)
 
 class AdminPage(tornado.web.RequestHandler):
 
