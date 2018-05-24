@@ -8,7 +8,8 @@ from Crypto.PublicKey import RSA
 import base64
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from settings import DATABASE_SETTINGS, TITLE, SALT
+from settings import *
+from tornado.log import enable_pretty_logging
 
 # connect to mysql database and create session
 connection_string = 'mysql+pymysql://{}:{}@{}/{}' \
@@ -18,13 +19,10 @@ connection = engine.connect()
 Base.metadata.create_all(engine)
 
 def generate_or_read_keys():
-    import os
-    project_path = os.path.dirname(os.path.abspath(__file__))
-    print("project path --->",project_path)
     try:
         # check if public and private key exists
-        publickey_file = open(project_path + "/publickey", "rb")
-        privatekey_file = open(project_path + "/privatekey", "rb")
+        publickey_file = open(PROJECT_PATH + "/publickey", "rb")
+        privatekey_file = open(PROJECT_PATH + "/privatekey", "rb")
         publickey_txt = publickey_file.read()
         privatekey_txt = privatekey_file.read()
         publickey = RSA.importKey(publickey_txt)
@@ -40,10 +38,10 @@ def generate_or_read_keys():
         # export keys
         privatekey_export = privatekey.exportKey()
         publickey_export = publickey.exportKey()
-        publickey_file = open(project_path + "/publickey","wb")
+        publickey_file = open(PROJECT_PATH + "/publickey","wb")
         publickey_file.write(publickey_export)
         publickey_file.close()
-        privatekey_file = open(project_path + "/privatekey","wb")
+        privatekey_file = open(PROJECT_PATH + "/privatekey","wb")
         privatekey_file.write(privatekey_export)
         privatekey_file.close()
 
@@ -71,6 +69,7 @@ def get_sentiment(words=None):
     negative = 0
     positive = 0
     headers = {'Authorization': 'Bearer HXN77N6WCDX7DHRRSDGTCCDVHDFSLCL6'}
+    print("Starting sentiment analysis")
     for w in words:
         resturl = "https://api.wit.ai/message?v=20180519&q=" + w[0]
         response = requests.get(resturl, headers=headers)
@@ -85,6 +84,8 @@ def get_sentiment(words=None):
                 negative+=1*w[1]
         except:
             sentiment = 'neutral'
+        if sentiment != 'neutral':
+            print("---- Positive: {} - Negative {} ----".format(positive,negative))
     # Assumes positive for equal results
     if positive>=negative:
         sentiment="Positive"
@@ -244,18 +245,19 @@ class AdminPage(tornado.web.RequestHandler):
         self.render("templates/admin.html", title="Admin Page",words=results,links=links)
 
 def make_app():
-    app_settings = {
-        "Debug": True,
-        "autoreload":True,
-    }
     return tornado.web.Application([
         (r"/", MainHandler),
         (r"/admin", AdminPage),
         (r"/media/(.*)", tornado.web.StaticFileHandler, {'path': "./media"}),
-    ],**app_settings)
+    ],**APP_SETTINGS)
 
 
 if __name__ == "__main__":
     app = make_app()
     app.listen(8888)
+    tornado.autoreload.start()
+    tornado.autoreload.watch(PROJECT_PATH + "/templates/base.html")
+    tornado.autoreload.watch(PROJECT_PATH + "/main.py")
+    enable_pretty_logging()
     tornado.ioloop.IOLoop.current().start()
+    

@@ -1,3 +1,5 @@
+import os
+
 # database settings
 # for docker keep hostname db or change the database hostname in docker.compose.yml accordingly
 DATABASE_SETTINGS = {
@@ -9,3 +11,10 @@ DATABASE_SETTINGS = {
 
 TITLE = "Sentiment Analysis Example"
 SALT = "mysalt"
+
+APP_SETTINGS = {
+    "Debug": True,
+    "autoreload":True,
+}
+
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))

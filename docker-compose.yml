@@ -15,10 +15,7 @@ services:
     volumes:                                                                                                                                                                                                
       - .:/code  
     working_dir: /code
-    command: bash -c "pip3 install -r requirements.txt && ./wait-for-it.sh db:3306 -t 60 -- python3 main.py"
-    #  ["pip3", "install", "-r", "requirements.txt", "&&", 
-    #  "./wait-for-it.sh", "db:3306", "--timeout=60", "--", "python3", "main.py"
-    #  ]
+    command: bash -c "pip3 install -r requirements.txt && ./wait-for-it.sh db:3306 -t 60 -- python3 -u main.py"
     ports:
      - "8888:8888"
     links:
