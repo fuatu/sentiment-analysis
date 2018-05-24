@@ -12,7 +12,13 @@ services:
     # - "3306:3306"
   web:
     build: .
-    command: ["./wait-for-it.sh", "db:3306", "--timeout=60", "--", "python3", "main.py"]
+    volumes:                                                                                                                                                                                                
+      - .:/code  
+    working_dir: /code
+    command: bash -c "pip3 install -r requirements.txt && ./wait-for-it.sh db:3306 -t 60 -- python3 main.py"
+    #  ["pip3", "install", "-r", "requirements.txt", "&&", 
+    #  "./wait-for-it.sh", "db:3306", "--timeout=60", "--", "python3", "main.py"
+    #  ]
     ports:
      - "8888:8888"
     links:
