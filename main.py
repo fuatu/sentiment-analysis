@@ -16,8 +16,6 @@ connection_string = 'mysql+pymysql://{}:{}@{}/{}' \
 engine = create_engine(connection_string, pool_recycle=3600)
 connection = engine.connect()
 Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-session = Session()
 
 def generate_or_read_keys():
     import os
@@ -145,6 +143,8 @@ def get_salted_hash(word=None):
 def add_words_to_db(words=None):
     if words is None:
         return None
+    Session = sessionmaker(bind=engine)
+    session = Session()
     # get keys for encryption
     publickey, privatekey = generate_or_read_keys()
     for w in words:
@@ -163,10 +163,13 @@ def add_words_to_db(words=None):
             cc_word = Words(word_id=word_id,word_text=word_text,word_count=word_count)
             session.add(cc_word)
     session.commit()
+    session.close()
 
 def add_url_to_db(url=None,sentiment=None):
     if url is None or sentiment is None:
         return None
+    Session = sessionmaker(bind=engine)
+    session = Session()
     url_id = get_salted_hash(url)
     url_text = url
     record = session.query(Links).filter_by(url_id=url_id).first()
@@ -176,6 +179,7 @@ def add_url_to_db(url=None,sentiment=None):
         cc_url = Links(url_id=url_id,url_text=url_text,sentiment=sentiment)
         session.add(cc_url)
     session.commit()
+    session.close()
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -225,6 +229,8 @@ class MainHandler(tornado.web.RequestHandler):
 class AdminPage(tornado.web.RequestHandler):
 
     def get(self):
+        Session = sessionmaker(bind=engine)
+        session = Session()
         from sqlalchemy import desc
         publickey, privatekey = generate_or_read_keys()
         results = []
