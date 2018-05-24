@@ -1,5 +1,20 @@
 # Sentiment Analysis
 
+## To install manually
+
+This is a sample project with the features below:
+- Using Tornado web server
+- Using SQLAlchemy ORM
+- Have a sngle page to submit a URL
+- Makes sentiment analysis of the submitted URL by using wit.ai
+- Also counts all the words after cleaning stop words with nltk library
+- Displays a word cloud according to number of frequency for top 100 words
+- The words are saved to database using asymmetrical encryption 
+- The urls are also saved to database with sentiment result
+- Has an admin page to display the words and urls in database
+- In frontend uses Bootstrap4 
+- For tables in admin page uses Datatables
+
 
 ## To install manually
 
