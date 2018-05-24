@@ -1,6 +1,6 @@
 # Sentiment Analysis
 
-## To install manually
+## Features 
 
 This is a sample project with the features below:
 - Using Tornado web server
